@@ -1,3 +1,4 @@
+#Name:Joshua Perez StudentID:1837170
 #importing mudules to sort and open csv files
 import csv
 import operator
