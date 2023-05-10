@@ -1,7 +1,17 @@
-#Name:Joshua Perez StudentID:1837170
-#importing mudules to sort and open csv files
+#Joshua Perez
+#ID:1837170
+#importing modules for date time and csv 
 import csv
-import operator
+from datetime import datetime
+#creating functions to sort specific rows for upcoming files
+def first_row_sort(row):
+    return row[0]
+def second_row_sort(row):
+    return row [1]
+def third_row_sort(row):
+    return row [2]
+def fourth_row_sort(row):
+    return row [3]
 #Creating multiple lists to pull csv data into
 manfaclist =[]
 price_list=[]
@@ -14,77 +24,92 @@ tower_list = []
 phone_list =[]
 #creating list for damaged items
 damaged_list = []
-#pulling data from the manufacturer csv file by sorting ID
-with open("ManufacturerList.csv") as manlist:
-    ml = csv.reader(manlist,delimiter=",")
-    sort = sorted(ml,key= operator.itemgetter(0))
-    for eachline in sort:
-        manfaclist.append(eachline[0:3])
-        damaged_column.append(eachline[3])
-        device_list.append(eachline[0:2])
-#pulling data from the price csv file by sorting ID
-with open("PriceList.csv") as pricelist:
-    pl = csv.reader(pricelist,delimiter=",")
-    mort = sorted(pl,key= operator.itemgetter(0))
-    for pline in mort:
-        price_list.append(pline[1])
-#pulling data from the service dates csv file by sorting ID
-with open("ServiceDatesList.csv") as sdlist:
-    sl = csv.reader(sdlist,delimiter=",")
-    bort = sorted(sl,key = operator.itemgetter(0))
-    for dline in bort:
-        service_date.append(dline[1])
-#creating list for previous items in order by ID
+#past service dates list 
+past_list = []
+#opening files to pull data from and adding to different files
+with open('ManufacturerList.csv', 'r') as file:
+    reader = csv.reader(file)
+    sorted_rows = sorted(reader, key=first_row_sort)
+    for line in sorted_rows:  
+        manfaclist.append(line[0:3])
+        damaged_column.append(line[3])
+        device_list.append(line[0:2])
+with open('PriceList.csv', 'r') as file:
+    reader = csv.reader(file)
+    sorted_rows = sorted(reader, key=first_row_sort)
+    for row in sorted_rows:
+        price_list.append(row[1])
+with open('ServiceDatesList.csv', 'r') as file:
+    reader = csv.reader(file)
+    sorted_rows = sorted(reader, key=first_row_sort)
+    for i in sorted_rows:
+        service_date.append(i[1])
+#appending columns of data that are needed for different files
 for x in range(0,len(manfaclist)):
     manfaclist[x].append(price_list[x])
 for x in range(0,len(manfaclist)):
     manfaclist[x].append(service_date[x])
 for x in range(0,len(manfaclist)):
     manfaclist[x].append(damaged_column[x])
-#creating lists for the device types in the inventory
 for x in range (0,len(device_list)):
     device_list[x].append(price_list[x])
     device_list[x].append(service_date[x])
     device_list[x].append(damaged_column[x])
+#beginning of file creation and sorting it by manufacturer type
+with open('FullData.csv', 'w') as file:
+    writer = csv.writer(file)
+    sorted_rows = sorted(manfaclist, key=second_row_sort)
+    writer.writerows(sorted_rows)
 
-# Creating a csv file for full inventory and sorting by manufacturer
-fill = sorted(manfaclist,key=operator.itemgetter(1))
 
-with open("FullInventory.csv","w",newline="") as tfi:
-    
-    csv_writer= csv.writer(tfi)
-    csv_writer.writerows(fill)
-#Creating a csv file for items that are laptops
-
+#Creating csv file for items that have status of damaged and in order of price
 for laptop in range(0,len(manfaclist)):
     if manfaclist[laptop][2] == "laptop":
         laptop_list.append(device_list[laptop])
-
-with open ("LaptopInventory.csv","w",newline="") as tll:
-    lap_writer = csv.writer(tll)
+# sorting the csv data in price reverse so its highest to lowest
+with open("LaptopInventory.csv","w",newline="") as lpi:
+    lap_writer = csv.writer(lpi)
+    sorted_rows = sorted(laptop_list, key=first_row_sort)
     lap_writer.writerows(laptop_list)
-#Creating a csv file for items that are towers
-for tower in range(0,len(manfaclist)):
-    if manfaclist[tower][2] == "tower":
-        tower_list.append(device_list[tower])
-with open ("TowerInventory.csv","w",newline="") as ttl:
-    tow_writer = csv.writer(ttl)
-    tow_writer.writerows(tower_list)
-#Creating csv for items in inventory that are phones
+
+#Creating csv file for items that have status of damaged and in order of price
 for phone in range(0,len(manfaclist)):
     if manfaclist[phone][2] == "phone":
         phone_list.append(device_list[phone])
-        
-with open ("PhoneInventory.csv","w",newline="") as tpl:
-    pho_writer = csv.writer(tpl)
-    pho_writer.writerows(phone_list)
+# sorting the csv data in price reverse so its highest to lowest
+with open("PhoneInventory.csv","w",newline="") as ppi:
+    phone_writer = csv.writer(ppi)
+    sorted_rows = sorted(phone_list, key=first_row_sort)
+    phone_writer.writerows(phone_list)
+
+#Creating csv file for items that have status of damaged and in order of price
+for tower in range(0,len(manfaclist)):
+    if manfaclist[tower][2] == "tower":
+        tower_list.append(device_list[tower])
+# sorting the csv data in price reverse so its highest to lowest
+with open("TowerInventory.csv","w",newline="") as twi:
+    phone_writer = csv.writer(twi)
+    sorted_rows = sorted(phone_list, key=first_row_sort)
+    phone_writer.writerows(tower_list)
 
 #Creating csv file for items that have status of damaged and in order of price
 for damaged in range(0,len(manfaclist)):
     if manfaclist[damaged][5] == "damaged":
         damaged_list.append(manfaclist[damaged][0:5])
 # sorting the csv data in price reverse so its highest to lowest
-dill = sorted(damaged_list,reverse= True,key=operator.itemgetter(int(3)))
 with open("DamagedInventory.csv","w",newline="") as dml:
     dam_writer = csv.writer(dml)
-    dam_writer.writerows(dill)
+    sorted_rows = sorted(damaged_list,key=third_row_sort,reverse=True)
+    dam_writer.writerows(damaged_list)
+# Creating final file dependent on if the service date has passed 
+for past in range(0,len(manfaclist)):
+    date_str = manfaclist[past][4]
+    date_obj = datetime.strptime(date_str, '%m/%d/%y')
+    if date_obj < datetime.now():
+        past_list.append(manfaclist[0:6])
+#sorting the file column by the service date
+with open("PastServiceDatesInventory.csv","w", newline = "") as psd:
+    past_writer = csv.writer(psd)
+    sorted_rows = sorted(past_list, key=fourth_row_sort)
+    past_writer.writerows(past_list)
+    
