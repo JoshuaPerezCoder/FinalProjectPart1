@@ -56,7 +56,7 @@ for x in range (0,len(device_list)):
     device_list[x].append(service_date[x])
     device_list[x].append(damaged_column[x])
 #beginning of file creation and sorting it by manufacturer type
-with open('FullData.csv', 'w') as file:
+with open('FullInventory.csv', 'w') as file:
     writer = csv.writer(file)
     sorted_rows = sorted(manfaclist, key=second_row_sort)
     writer.writerows(sorted_rows)
